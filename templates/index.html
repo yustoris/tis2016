@@ -8,9 +8,13 @@
   <body>
     <div id="body">
       <div id="inbox">
-        {% for message in messages %}
-          {% include "message.html" %}
-        {% end %}
+	<div id="ft-talk" class="ft-icon-size-l ft-icon-shape-rounded-square ft-icon-border-thin ft-icon-shadow-show ft-baloon-shape-rounded-square ft-baloon-border-thin ft-baloon-shadow-show ft-talk-width-full" >
+	  <ul id="ft-talk-body">
+	    {% for message in messages %}
+              {% include "message.html" %}
+            {% end %}
+	  </ul>
+	</div>
       </div>
       <div id="input">
         <form action="/a/message/new" method="post" id="messageform">

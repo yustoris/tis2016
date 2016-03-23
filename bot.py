@@ -5,18 +5,16 @@ from spot import Spot
 class Bot:
     def __init__(self):
         self.keyword_fetcher = Keywords()
+        self.spot_client = Spot()
 
     def fetch_spot(self, sentence):
         result = self.keyword_fetcher.extract_from_sentence(sentence)
+
         message = ''
-
-        message += 'キーワード: '
-        for keyword in result[0]:
-            message += keyword + ' '
-
-        message += '場所: '
-        for location in result[1]:
-            message += location + ' '
+        spot = self.spot_client.recommend_spot(list(result[1])[0], result[0])
+        message += spot['name']
+        message += 'はどうでしょうか？'
+        message += spot['reason']
+        message += 'ですよ'
         
         return message
-        

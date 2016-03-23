@@ -92,6 +92,8 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
         parsed = tornado.escape.json_decode(message)
         user_message = {
             "id": str(uuid.uuid4()),
+            "pos":'right',
+            "talker":'human',
             "body": parsed["body"], 
             }
         user_message["html"] = tornado.escape.to_basestring(
@@ -105,12 +107,16 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
         bot_body = self.bot.fetch_spot(message)
         bot_message = {
             "id": str(uuid.uuid4()),
+            "pos":'left',
+            "talker":'robot',
             "body": bot_body,
             }
         bot_message["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=bot_message))
         ChatSocketHandler.update_cache(bot_message)
-        ChatSocketHandler.send_updates(bot_message)        
+        ChatSocketHandler.send_updates(bot_message)
+        ## 色
+        ## 利用方法の提携文言
 
 
 def main():

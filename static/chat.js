@@ -62,7 +62,7 @@ var updater = {
         if (existing.length > 0) return;
         var node = $(message.html);
         node.hide();
-        $("#inbox").append(node);
+        $("#ft-talk-body").append(node);
         node.slideDown();
     }
 };

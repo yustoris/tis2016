@@ -1,1 +1,6 @@
-<div class="message" id="m{{ message["id"] }}">{% module linkify(message["body"]) %}</div>
+<li class="ft-talk ft-icon-pos-{{ message["pos"] }} ft-baloon-color-white">
+  <div class="ft-icon ft-icon-{{ message["talker"] }}"></div>
+  <div class="ft-baloon">
+    {% module linkify(message["body"]) %}
+  </div>
+</li>
