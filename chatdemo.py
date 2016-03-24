@@ -103,12 +103,13 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
 
     def _bot_message(self, message):
-        bot_body = self.bot.fetch_spot(message)
+        bot_message = self.bot.fetch_spot(message)
         bot_message = {
             "id": str(uuid.uuid4()),
             "pos":'left',
             "talker":'robot',
-            "body": bot_body,
+            "body": bot_message['body'],
+            "image": bot_message['image']
             }
         bot_message["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=bot_message))

@@ -1,6 +1,13 @@
 <li class="ft-talk ft-icon-pos-{{ message["pos"] }} ft-baloon-color-white">
   <div class="ft-icon ft-icon-{{ message["talker"] }}"></div>
   <div class="ft-baloon">
+	{% if "image" in message %}
+	<ul>
+	  <li>{% module linkify(message["body"]) %}</li>
+	  <li><img src="{{ message["image"] }}" width="128px" height="128px"/></li>
+	</ul>
+	{% else %}
     {% module linkify(message["body"]) %}
+	{% end %}
   </div>
 </li>

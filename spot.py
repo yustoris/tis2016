@@ -56,7 +56,7 @@ class Spot:
             candidate = {}
 
             if venue['stats']['tipCount'] >= 2 and venue['stats']['checkinsCount'] >= 1500:
-                venue_detail = self._foursquare_client.venues(venue_id)['venue']# .tips(venue_id, params={'sort':'popular'})
+                venue_detail = self._foursquare_client.venues(venue_id)['venue']
 
                 if len(venue_detail['tips']['groups']) > 1:
                     tips = venue_detail['tips']['groups'][1]['items']
@@ -80,14 +80,22 @@ class Spot:
                 if len(tags) > 0:
                     candidate['name'] = venue['name']
                     candidate['tags'] = tags
+                    if 'photos' in venue_detail and venue_detail['photos']['groups'] and venue_detail['photos']['groups'][0]['items']:
+                        photo = venue_detail['photos']['groups'][0]['items'][0]
+                        candidate['image'] = photo['prefix'] + '128x128' +photo['suffix']
                     candidates.append(candidate)
+            if len(candidates) > 0:
+                break
 
         if len(candidates) == 0:
             return None
-        # Instantly return
+
+        # Instantly return most popular candidate
         print(candidates)
+        top_candidate = candidates[0]
         ret = {
-            'name': candidates[0]['name'],
-            'reason': reduce(lambda i, s: i+' '+s, candidates[0]['tags']) # Add recommend reason
+            'name': top_candidate['name'],
+            'reason': reduce(lambda i, s: i+' '+s, top_candidate['tags']), # Add recommend reason
+            'image': top_candidate['image']
         }
         return ret
