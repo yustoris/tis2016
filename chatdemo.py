@@ -60,7 +60,6 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
           super(ChatSocketHandler, self).__init__(*args, **kwargs)
           self.bot = Bot()
-    
 
     def get_compression_options(self):
         # Non-None enables compression with default options.
@@ -116,7 +115,7 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
         ChatSocketHandler.update_cache(bot_message)
         ChatSocketHandler.send_updates(bot_message)
         ## 色
-        ## 利用方法の提携文言
+        ## 利用方法の定型文言
 
 
 def main():

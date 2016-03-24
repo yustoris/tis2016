@@ -12,9 +12,12 @@ class Bot:
 
         message = ''
         spot = self.spot_client.recommend_spot(list(result[1])[0], result[0])
-        message += spot['name']
-        message += 'はどうでしょうか？'
-        message += spot['reason']
-        message += 'ですよ'
+        if spot:
+            message += spot['name']
+            message += 'はどうでしょうか？'
+            message += spot['reason']
+            message += 'ですよ'
+        else:
+            message = '申し訳ありません、候補が見つかりませんでした'
         
         return message
