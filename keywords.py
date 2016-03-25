@@ -1,7 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 import json
-from secret import SECRETS
+import os
 
 class Keywords:
     def __init__(self):
@@ -10,10 +10,11 @@ class Keywords:
         
     
     def extract_from_sentence(self, sentence):
+        # TODO: Split this function to corresponding
         # Fetch keywords with Yahoo API
         data = {
             'sentence': sentence,
-            'appid': SECRETS['YAHOO_APP_ID']
+            'appid': os.environ['YAHOO_APP_ID']
         }
         response = requests.post(self.YAHOO_KEYWORD_API_URL, data=data)
         keyphrases = set()
@@ -26,7 +27,7 @@ class Keywords:
         # Fetch NEs with Goo API
         data = {
             'sentence': sentence,
-            'app_id': SECRETS['GOO_APP_ID'],
+            'app_id': os.environ['GOO_APP_ID'],
             'class_filter': 'LOC'
         }
         headers = {'Content-type':'application/json'}

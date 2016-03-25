@@ -30,6 +30,8 @@ import uuid
 from tornado.options import define, options
 from bot import Bot
 
+import os
+
 define("port", default=8888, help="run on the given port", type=int)
 
 
@@ -40,7 +42,7 @@ class Application(tornado.web.Application):
             (r"/chatsocket", ChatSocketHandler),
         ]
         settings = dict(
-            cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
+            cookie_secret=os.environ['COOKIE_SECRET'],
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=True,
@@ -104,17 +106,19 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
     def _bot_message(self, message):
         bot_message = self.bot.fetch_spot(message)
-        bot_message = {
+        bot_message_out = {
             "id": str(uuid.uuid4()),
             "pos":'left',
             "talker":'robot',
             "body": bot_message['body'],
-            "image": bot_message['image']
             }
-        bot_message["html"] = tornado.escape.to_basestring(
-            self.render_string("message.html", message=bot_message))
-        ChatSocketHandler.update_cache(bot_message)
-        ChatSocketHandler.send_updates(bot_message)
+        if 'image' in bot_message:
+            bot_message_out['image'] = bot_message['image']
+            
+        bot_message_out["html"] = tornado.escape.to_basestring(
+            self.render_string("message.html", message=bot_message_out))
+        ChatSocketHandler.update_cache(bot_message_out)
+        ChatSocketHandler.send_updates(bot_message_out)
         ## 色
         ## 利用方法の定型文言
 

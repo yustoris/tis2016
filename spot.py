@@ -4,15 +4,15 @@ import json
 import foursquare
 from keywords import Keywords
 from functools import reduce
-from secret import SECRETS
+import os
 from collections import Counter
 
 class Spot:
     def __init__(self):
         self.FOURSQUARE_API_URL = 'https://api.foursquare.com/v2/venues/search'
         self._foursquare_client = foursquare.Foursquare(
-            client_id=SECRETS['FOURSQUARE_CLIENT_ID'],
-            client_secret=SECRETS['FOURSQUARE_CLIENT_SECRET'],
+            client_id=os.environ['FOURSQUARE_CLIENT_ID'],
+            client_secret=os.environ['FOURSQUARE_CLIENT_SECRET'],
             lang='ja'
         )
         categories = self._foursquare_client.venues.categories()
@@ -32,6 +32,7 @@ class Spot:
         return matched_category_ids
         
     def recommend_spot(self, location, keywords):
+        print(keywords)
         target_categories = self._match_category_ids(keywords)
 
         target_category_names = set(category[0] for category in target_categories)
@@ -40,7 +41,6 @@ class Spot:
         params={
             'near':location,
             'categoryId':reduce(lambda i, s:i+','+s, target_category_ids),
-            'intent': 'browse',
             'limit':50,
         }
 
@@ -54,7 +54,6 @@ class Spot:
         for venue in response['venues']:
             venue_id = venue['id']
             candidate = {}
-
             if venue['stats']['tipCount'] >= 2 and venue['stats']['checkinsCount'] >= 1500:
                 venue_detail = self._foursquare_client.venues(venue_id)['venue']
 
@@ -72,7 +71,6 @@ class Spot:
                         like_count = tip['likes']['count']
                         word_counter[keyword] += 1 * (1 if like_count == 0 else like_count)
 
-                print(venue['id'], venue['name'], word_counter)
                 tags = []
                 for key, count in word_counter.most_common(10):
                     if count > 1:
